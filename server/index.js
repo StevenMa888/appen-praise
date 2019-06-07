@@ -15,6 +15,7 @@ const AppenPraise = require('./models/appenpraise')
 
 const PORT = 4390
 
+app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
 app.listen(PORT, () => console.log("App listening on port " + PORT))
@@ -43,7 +44,6 @@ app.get('/oauth', (req, res) => {
 
 app.post('/command', (req, res) => res.send('Your ngrok tunnel is up and running!'))
 
-const fs = require("fs");
 app.post('/appenpraise', async (req, res) => {
     const praise = req.body.text
     if (await AppenPraise.findOne({praise})) {
@@ -57,4 +57,10 @@ app.post('/appenpraise', async (req, res) => {
     }, (err) => {
         res.json({success: false, message: "Praise failed to save!"})
     })
+})
+
+app.get('/api/praises', async (req, res) => {
+    let allPraises = await AppenPraise.find()
+    allPraises = allPraises.map(ap => ap.praise)
+    res.json(allPraises)
 })
