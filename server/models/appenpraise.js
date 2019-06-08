@@ -1,7 +1,9 @@
 const mongoose = require('mongoose')
 
 const AppenPraiseScheme = mongoose.Schema({
-    praise: String
+    user_name: String,
+    text: String,
+    nominee: String
 })
 
 module.exports = mongoose.model('AppenPraise', AppenPraiseScheme)

@@ -1,5 +1,17 @@
-<ul>
-  <li *ngFor="let p of praises">
-    {{ p }}
-  </li>
-</ul>
+<div class="header">
+  <div class="logo">
+    <img src="../../assets/appen-logo.png">
+  </div>
+  <h1>AppenPraise</h1>
+  <p>Welcome to the wall of praises!</p>
+</div>
+<div class="board">
+  <div *ngFor="let p of praises" class="block" [style.background-color]="p.blockColor">
+    <h3>
+      {{ p.text }}
+    </h3>
+    <h4>
+      by {{ p.user_name }}
+    </h4>
+  </div>
+</div>

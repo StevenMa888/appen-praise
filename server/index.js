@@ -45,13 +45,29 @@ app.get('/oauth', (req, res) => {
 app.post('/command', (req, res) => res.send('Your ngrok tunnel is up and running!'))
 
 app.post('/appenpraise', async (req, res) => {
-    const praise = req.body.text
-    if (await AppenPraise.findOne({praise})) {
+    console.log(req.body)
+    const {user_name, text} = req.body
+    let nominee = ''
+
+    const firstMentionStartIndex = text.indexOf('@')
+    let firstMentionEndIndex = text.indexOf(' ', firstMentionStartIndex)
+    if (firstMentionStartIndex > -1) {
+        if (firstMentionEndIndex < 0) {
+            firstMentionEndIndex = text.length - 1
+        }
+        nominee = text.substring(firstMentionStartIndex + 1, firstMentionEndIndex)
+    }
+
+    if (await AppenPraise.findOne({user_name, text})) {
         return res.json({success: false, message: 'The praise already exists!'})
     }
+
     const appenpraise = new AppenPraise({
-        praise
+        user_name,
+        text,
+        nominee
     })
+
     await appenpraise.save(_ => {
         res.json({success: true, message: "Praise has been successfully saved!"})
     }, (err) => {
@@ -60,7 +76,6 @@ app.post('/appenpraise', async (req, res) => {
 })
 
 app.get('/api/praises', async (req, res) => {
-    let allPraises = await AppenPraise.find()
-    allPraises = allPraises.map(ap => ap.praise)
-    res.json(allPraises)
+    allPraises = await AppenPraise.find()
+    res.json({allPraises})
 })
