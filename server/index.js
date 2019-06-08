@@ -1,9 +1,17 @@
 const express = require('express')
 const request = require('request')
 const bodyParser = require('body-parser')
+const fs = require('fs')
 
-const clientId = '646720763187.657669850772'
-const clientSecret = '174322dae7c53ca627f734811d19306e'
+const tokenConfig = fs.readFileSync('token-config.txt', 'utf8')
+const tokenConfigMap = {}
+const lines = tokenConfig.split('\n').forEach(line => {
+    const pair = line.split('=')
+    tokenConfigMap[pair[0]] = pair[1]
+})
+const clientId = tokenConfigMap['clientId']
+const clientSecret = tokenConfigMap['clientSecret']
+const token = tokenConfigMap['token']
 
 const app = express()
 const mongoose = require('mongoose')
@@ -78,4 +86,19 @@ app.post('/appenpraise', async (req, res) => {
 app.get('/api/praises', async (req, res) => {
     allPraises = await AppenPraise.find()
     res.json({allPraises})
+})
+
+app.get('/api/users', async (req, res) => {
+    request({
+        url: 'https://slack.com/api/users.list',
+        qs: {token},
+        method: 'GET',
+    }, function (error, response, body) {
+        if (error) {
+            console.log(error)
+        } else {
+            console.log(body)
+            res.json(JSON.parse(body))
+        }
+    })
 })

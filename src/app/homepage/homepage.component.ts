@@ -10,11 +10,17 @@ import { HttpClient } from '@angular/common/http';
 export class HomepageComponent implements OnInit {
 
   private praises: Array<any>
+  private users: Array<any>
 
   constructor(private http: HttpClient) {
     this.getAllPraises().subscribe(data => {
       if (data) {
         this.praises = this.addColors(data.allPraises)
+      }
+    })
+    this.getAllUsers().subscribe(data => {
+      if (data) {
+        this.users = data
       }
     })
   }
@@ -24,6 +30,10 @@ export class HomepageComponent implements OnInit {
 
   getAllPraises(): Observable<any> {
     return this.http.get('/api/praises')
+  }
+
+  getAllUsers(): Observable<any> {
+    return this.http.get('/api/users')
   }
 
   addColors(data) {
