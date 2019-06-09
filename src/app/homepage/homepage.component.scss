@@ -12,6 +12,10 @@
 
         img {
             width: 172.5px;
+
+            @media screen and (max-width: 640px) {
+                width: 125px;
+            }
         }
     }
 
@@ -27,6 +31,15 @@
     width: 900px;
     left: 0;
     right: 0;
+
+    @media screen and (max-width: 960px) {
+        width: 600px;
+    }
+
+    @media screen and (max-width: 640px) {
+        width: 400px;
+        text-align: center;
+    }
 
     .block {
         display: inline-block;
