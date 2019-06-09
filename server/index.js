@@ -53,7 +53,6 @@ app.get('/oauth', (req, res) => {
 app.post('/command', (req, res) => res.send('Your ngrok tunnel is up and running!'))
 
 app.post('/appenpraise', async (req, res) => {
-    console.log(req.body)
     const {user_name, text} = req.body
     let nominee = ''
 
@@ -92,7 +91,6 @@ app.get('/api/users', async (req, res) => {
         if (error) {
             console.log(error)
         } else {
-            console.log(body)
             res.json(JSON.parse(body))
         }
     })
