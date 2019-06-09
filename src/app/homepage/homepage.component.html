@@ -7,11 +7,14 @@
 </div>
 <div class="board">
   <div *ngFor="let p of praises" class="block" [style.background-color]="p.blockColor">
+    <div class="nominee-photo">
+      <img *ngIf="p.nomineePhotoUrl != null" [src]="p.nomineePhotoUrl">
+    </div>
     <h3>
       {{ p.text }}
     </h3>
     <h4>
-      by {{ p.user_name }}
+      by {{ p.real_name }}
     </h4>
   </div>
 </div>

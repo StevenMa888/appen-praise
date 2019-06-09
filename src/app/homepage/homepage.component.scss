@@ -29,10 +29,15 @@
 
     .block {
         display: inline-block;
-        width: 31%;
+        width: 280px;
         margin: 20px 10px;
         text-align: center;
         padding: 20px;
+        box-sizing: border-box;
+
+        .nominee-photo {
+            text-align: left;
+        }
 
         h4 {
             float: right;

@@ -13,14 +13,14 @@ export class HomepageComponent implements OnInit {
   private users: Array<any>
 
   constructor(private http: HttpClient) {
-    this.getAllPraises().subscribe(data => {
-      if (data) {
-        this.praises = this.addColors(data.allPraises)
-      }
-    })
-    this.getAllUsers().subscribe(data => {
-      if (data) {
-        this.users = data
+    this.getAllUsers().subscribe(userData => {
+      if (userData) {
+        this.users = userData.members
+        this.getAllPraises().subscribe(praiseData => {
+          if (praiseData) {
+            this.praises = this.enrichPraises(praiseData.allPraises)
+          }
+        })
       }
     })
   }
@@ -34,6 +34,13 @@ export class HomepageComponent implements OnInit {
 
   getAllUsers(): Observable<any> {
     return this.http.get('/api/users')
+  }
+
+  enrichPraises(data) {
+    data = this.addColors(data)
+    data = this.addPhotos(data)
+    data = this.addRealNames(data)
+    return data
   }
 
   addColors(data) {
@@ -50,6 +57,34 @@ export class HomepageComponent implements OnInit {
     const opacity = 0.6
     const color = 'rgba('+ r +','+ g +','+ b +',' + opacity +')'
     return color
+  }
+
+  addPhotos(data) {
+    const that = this
+    return data.map(d => {
+      if (d.nominee !== '') {
+        const nomineeProfile = that.users.find(user => {
+          return user.name === d.nominee
+        })
+        if (nomineeProfile) {
+          d.nomineePhotoUrl = nomineeProfile.profile.image_72
+        }
+      }
+      return d
+    })
+  }
+
+  addRealNames(data) {
+    const that = this
+    return data.map(d => {
+      if (d.user_name !== '') {
+        const userProfile = that.users.find(user => {
+          return user.name === d.user_name
+        })
+        d.real_name = userProfile.real_name
+      }
+      return d
+    })
   }
 
 }
