@@ -57,13 +57,8 @@ app.post('/appenpraise', async (req, res) => {
     const {user_name, text} = req.body
     let nominee = ''
 
-    const firstMentionStartIndex = text.indexOf('@')
-    let firstMentionEndIndex = text.indexOf(' ', firstMentionStartIndex)
-    if (firstMentionStartIndex > -1) {
-        if (firstMentionEndIndex < 0) {
-            firstMentionEndIndex = text.length - 1
-        }
-        nominee = text.substring(firstMentionStartIndex + 1, firstMentionEndIndex)
+    if (text.indexOf('@') > -1) {
+        nominee = /@([a-z|A-Z|0-9|_|-]+)/.exec(text)[1]
     }
 
     if (await AppenPraise.findOne({user_name, text})) {
